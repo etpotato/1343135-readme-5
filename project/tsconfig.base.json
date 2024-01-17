@@ -18,6 +18,7 @@
     "strict": true,
     "paths": {
       "@project/shared/helpers": ["shared/helpers/src/index.ts"],
+      "@project/shared/post/models": ["shared/post/models/src/index.ts"],
       "@project/shared/repository": ["shared/repository/src/index.ts"],
       "@project/shared/types": ["shared/types/src/index.ts"]
     }

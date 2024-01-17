@@ -1,4 +1,5 @@
-import { Tag } from "./tag.type";
+import { Like } from "../like/like.type";
+import { Tag } from "../tag/tag.type";
 
 export const PostType = {
   Video: 'video',
@@ -88,6 +89,8 @@ export type PostCommon = {
   createdAt: string;
   publishedAt: string;
   tags?: Tag[];
+  likes?: Like[];
+  comment?: Comment[];
   original?: string;
 }
 

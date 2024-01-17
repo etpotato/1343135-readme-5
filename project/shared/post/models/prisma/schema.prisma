@@ -1,0 +1,132 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Post {
+  id             String     @id @default(uuid())
+  author         String
+  status         PostStatus
+  isRepost       Boolean    @map("is_repost")
+  type           PostType
+  tags           Tag[]
+  likes          Like[]
+  comments       Comment[]
+  original       String?
+  originalAuthor String?    @map("original_author")
+
+  createdAt   DateTime @default(now()) @map("created_at")
+  publishedAt DateTime @default(now()) @map("published_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  videoContent VideoContent?
+  textContent  TextContent?
+  quoteContent QuoteContent?
+  photoContent PhotoContent?
+  linkContent  LinkContent?
+
+  @@index([author])
+  @@map("posts")
+}
+
+model Tag {
+  id        String   @id @default(uuid())
+  text      String   @unique
+  posts     Post[]
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("tags")
+}
+
+model Like {
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    String   @map("post_id")
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@id([postId, userId])
+  @@map("likes")
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  text      String
+  authorId  String   @map("author_id")
+  postId    String   @map("post_id")
+  post      Post     @relation(fields: [postId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([postId])
+  @@map("comments")
+}
+
+model VideoContent {
+  id     String @id @default(uuid())
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  postId String @unique @map("post_id")
+  title  String
+  url    String
+
+  @@map("video_contents")
+}
+
+model TextContent {
+  id          String @id @default(uuid())
+  post        Post   @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  postId      String @unique @map("post_id")
+  title       String
+  description String
+  text        String
+
+  @@map("text_contents")
+}
+
+model QuoteContent {
+  id          String @id @default(uuid())
+  post        Post   @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  postId      String @unique @map("post_id")
+  text        String
+  quoteAuthor String @map("quote_author")
+
+  @@map("quote_contents")
+}
+
+model PhotoContent {
+  id          String @id @default(uuid())
+  post        Post   @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  postId      String @unique @map("post_id")
+  url         String
+  description String
+
+  @@map("photo_contents")
+}
+
+model LinkContent {
+  id          String @id @default(uuid())
+  post        Post   @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  postId      String @unique @map("post_id")
+  url         String
+  description String
+
+  @@map("link_contents")
+}
+
+enum PostStatus {
+  draft
+  published
+}
+
+enum PostType {
+  video
+  text
+  quote
+  photo
+  link
+}

@@ -5,7 +5,7 @@ import { Entity } from './entity.type';
 import { Repository } from './repository.interface';
 
 export abstract class BaseMongoRepository<
-  EntityType extends Entity,
+  EntityType extends Entity<string>,
   DocumentType extends Document
 > implements Repository<EntityType> {
 

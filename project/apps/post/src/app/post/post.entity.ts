@@ -20,7 +20,7 @@ import {
 import { Entity } from "@project/shared/repository";
 import { Injectable } from "@nestjs/common";
 
-abstract class BasePostEntity implements Entity<PostCommon> {
+abstract class BasePostEntity implements Entity<string, PostCommon> {
   public author: string;
   public status: PostStatusValue;
   public isRepost: boolean;
@@ -32,15 +32,30 @@ abstract class BasePostEntity implements Entity<PostCommon> {
   public original?: string;
   public id?: string;
 
-  constructor(post: Entity<PostCommon>) {
+  constructor(post: PostCommon & { id?: string }) {
     this.author = post.author;
     this.status = post.status;
     this.isRepost = post.isRepost;
     this.createdAt = post.createdAt;
     this.publishedAt = post.publishedAt;
     this.tags = post.tags;
+    this.type = post.type;
     this.original = this.isRepost ? post.original : undefined;
     this.id = post.id;
+  }
+
+  public toPOJO() {
+    return {
+      author: this.author,
+      status: this.status,
+      isRepost: this.isRepost,
+      createdAt: this.createdAt,
+      publishedAt: this.publishedAt,
+      tags: this.tags,
+      type: this.type,
+      original: this.original,
+      id: this.id,
+    };
   }
 
   public update(patch: Partial<PostCommon>) {
@@ -50,8 +65,7 @@ abstract class BasePostEntity implements Entity<PostCommon> {
   }
 }
 
-class PostVideoEntity extends BasePostEntity implements Entity<PostVideo> {
-  public type = PostType.Video;
+class PostVideoEntity extends BasePostEntity implements Entity<string, PostVideo> {
   public content: PostVideoContent;
 
   constructor(post: PostVideo) {
@@ -60,6 +74,15 @@ class PostVideoEntity extends BasePostEntity implements Entity<PostVideo> {
     this.content = {
       title: post.content.title,
       url: post.content.url,
+    }
+  }
+
+  public toPOJO() {
+    const common = super.toPOJO();
+
+    return {
+      ...common,
+      content: {...this.content}
     }
   }
 
@@ -75,8 +98,7 @@ class PostVideoEntity extends BasePostEntity implements Entity<PostVideo> {
   }
 }
 
-class PostTextEntity extends BasePostEntity implements Entity<PostText> {
-  public type = PostType.Text;
+class PostTextEntity extends BasePostEntity implements Entity<string, PostText> {
   public content: PostTextContent;
 
   constructor(post: PostText) {
@@ -86,6 +108,15 @@ class PostTextEntity extends BasePostEntity implements Entity<PostText> {
       title: post.content.title,
       description: post.content.description,
       text: post.content.text,
+    }
+  }
+
+  public toPOJO() {
+    const common = super.toPOJO();
+
+    return {
+      ...common,
+      content: {...this.content}
     }
   }
 
@@ -102,8 +133,7 @@ class PostTextEntity extends BasePostEntity implements Entity<PostText> {
   }
 }
 
-class PostQuoteEntity extends BasePostEntity implements Entity<PostQuote> {
-  public type = PostType.Quote;
+class PostQuoteEntity extends BasePostEntity implements Entity<string, PostQuote> {
   public content: PostQuoteContent;
 
   constructor(post: PostQuote) {
@@ -112,6 +142,15 @@ class PostQuoteEntity extends BasePostEntity implements Entity<PostQuote> {
     this.content = {
       text: post.content.text,
       quoteAuthor: post.content.quoteAuthor,
+    }
+  }
+
+  public toPOJO() {
+    const common = super.toPOJO();
+
+    return {
+      ...common,
+      content: {...this.content}
     }
   }
 
@@ -127,8 +166,7 @@ class PostQuoteEntity extends BasePostEntity implements Entity<PostQuote> {
   }
 }
 
-class PostPhotoEntity extends BasePostEntity implements Entity<PostPhoto> {
-  public type = PostType.Photo;
+class PostPhotoEntity extends BasePostEntity implements Entity<string, PostPhoto> {
   public content: PostPhotoContent;
 
   constructor(post: PostPhoto) {
@@ -136,6 +174,15 @@ class PostPhotoEntity extends BasePostEntity implements Entity<PostPhoto> {
 
     this.content = {
       url: post.content.url,
+    }
+  }
+
+  public toPOJO() {
+    const common = super.toPOJO();
+
+    return {
+      ...common,
+      content: {...this.content}
     }
   }
 
@@ -150,8 +197,7 @@ class PostPhotoEntity extends BasePostEntity implements Entity<PostPhoto> {
   }
 }
 
-class PostLinkEntity extends BasePostEntity implements Entity<PostLink> {
-  public type = PostType.Link;
+class PostLinkEntity extends BasePostEntity implements Entity<string, PostLink> {
   public content: PostLinkContent;
 
   constructor(post: PostLink) {
@@ -161,6 +207,15 @@ class PostLinkEntity extends BasePostEntity implements Entity<PostLink> {
       url: post.content.url,
       description: post.content.description,
     };
+  }
+
+  public toPOJO() {
+    const common = super.toPOJO();
+
+    return {
+      ...common,
+      content: {...this.content}
+    }
   }
 
   public update(patch: Partial<PostLink>) {
@@ -195,4 +250,4 @@ export class PostEntityFactory {
   }
 }
 
-export type PostEntity = Entity<Post>;
+export type PostEntity = Entity<string, Post>;

@@ -3,7 +3,7 @@ import { SALT_ROUNDS } from './user.const';
 import type { UserAuth, User } from '@project/shared/types';
 import { Entity } from '@project/shared/repository';
 
-export class UserEntity implements Entity<UserAuth> {
+export class UserEntity implements Entity<string, UserAuth> {
   public id?: string;
   public email: string;
   public name: string;

@@ -57,27 +57,27 @@ export type PostContentTypeMap = {
 export type ContentType<T extends PostTypeValue> = PostContentTypeMap[T];
 
 export type PostVideoContentByType = {
-  type: typeof PostType.Video;
+  // type: typeof PostType.Video;
   content: PostVideoContent;
 };
 
 export type PostTextContentByType = {
-  type: typeof PostType.Text;
+  // type: typeof PostType.Text;
   content: PostTextContent;
 };
 
 export type PostQuoteContentByType = {
-  type: typeof PostType.Quote;
+  // type: typeof PostType.Quote;
   content: PostQuoteContent;
 };
 
 export type PostPhotoContentByType = {
-  type: typeof PostType.Photo;
+  // type: typeof PostType.Photo;
   content: PostPhotoContent;
 };
 
 export type PostLinkContentByType = {
-  type: typeof PostType.Link;
+  // type: typeof PostType.Link;
   content: PostLinkContent;
 };
 

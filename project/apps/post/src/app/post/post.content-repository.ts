@@ -12,11 +12,11 @@ import {
 } from "@project/shared/types";
 
 
-class PostVideoContentRepository extends MemoryRepository<Entity<PostVideoContent>> {}
-class PostTextContentRepository extends MemoryRepository<Entity<PostTextContent>> {}
-class PostQuoteContentRepository extends MemoryRepository<Entity<PostQuoteContent>> {}
-class PostPhotoContentRepository extends MemoryRepository<Entity<PostPhotoContent>> {}
-class PostLinkContentRepository extends MemoryRepository<Entity<PostLinkContent>> {}
+class PostVideoContentRepository extends MemoryRepository<Entity<string, PostVideoContent>> {}
+class PostTextContentRepository extends MemoryRepository<Entity<string, PostTextContent>> {}
+class PostQuoteContentRepository extends MemoryRepository<Entity<string, PostQuoteContent>> {}
+class PostPhotoContentRepository extends MemoryRepository<Entity<string, PostPhotoContent>> {}
+class PostLinkContentRepository extends MemoryRepository<Entity<string, PostLinkContent>> {}
 
 @Injectable()
 export class PostContentRepositoryFactory {
@@ -35,7 +35,7 @@ export class PostContentRepositoryFactory {
   }
 
   public create(type: PostTypeValue)
-    : MemoryRepository<Entity<PostContent>>  {
+    : MemoryRepository<Entity<string, PostContent>>  {
     switch (type) {
       case PostType.Video:
         return this.postVideoContentRepository;
